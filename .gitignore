@@ -1,0 +1,8 @@
+/.cabal-sandbox/
+/Test
+/Test.hi
+/Test.hs
+/Test.hs~
+/Test.o
+/cabal.sandbox.config
+/dist/
