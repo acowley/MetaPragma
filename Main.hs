@@ -15,6 +15,7 @@ haskell2015 = [ "ConstraintKinds"
               , "MultiParamTypeClasses"
               , "NoImplicitPrelude"
               , "TypeFamilies"
+              , "TypeOperators"
               , "ScopedTypeVariables" ]
 
 defns :: [(String, [String])]
