@@ -15,7 +15,9 @@ expect to work out of the box today. It includes
 - MultiParamTypeClasses
 - NoImplicitPrelude
 - TypeFamilies
+- TypeOperators
 - ScopedTypeVariables
+- RankNTypes
 
 You use this preprocessor by installing it somewhere (I build it in a
 sandbox, and `cabal install --symlink-bindir ~/.cabal/bin`), then, in
