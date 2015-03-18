@@ -8,9 +8,11 @@ import Data.Maybe (mapMaybe)
 haskell2015 :: [String]
 haskell2015 = [ "ConstraintKinds"
               , "DataKinds"
+              , "EmptyCase"
               , "FlexibleContexts"
               , "FlexibleInstances"
               , "GADTs"
+              , "KindSignatures"
               , "LambdaCase"
               , "MultiParamTypeClasses"
               , "NoImplicitPrelude"

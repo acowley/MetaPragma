@@ -8,16 +8,18 @@ expect to work out of the box today. It includes
 
 - ConstraintKinds
 - DataKinds
+- EmptyCase
 - FlexibleContexts
 - FlexibleInstances
 - GADTs
+- KindSignatures
 - LambdaCase
 - MultiParamTypeClasses
 - NoImplicitPrelude
+- RankNTypes
+- ScopedTypeVariables
 - TypeFamilies
 - TypeOperators
-- ScopedTypeVariables
-- RankNTypes
 
 You use this preprocessor by installing it somewhere (I build it in a
 sandbox, and `cabal install --symlink-bindir ~/.cabal/bin`), then, in
