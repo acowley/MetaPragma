@@ -1,7 +1,25 @@
-{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE LambdaCase, TupleSections #-}
 import Data.List (intercalate, isInfixOf, isPrefixOf, nub)
-import System.Environment (getArgs)
+import Control.Monad (filterM)
 import Data.Maybe (mapMaybe)
+import System.Directory
+import System.Environment (getArgs)
+import System.FilePath ((</>), dropExtension)
+
+-- | Look in the @$HOME/.metapragma@ directory for meta-pragma
+-- definitions.  Such definitions are plain text files with one
+-- LANGUAGE pragma per line. The META pragma name is the filename
+-- without any extension.
+getDefinitions :: IO [(String, [String])]
+getDefinitions =
+  do home <- getHomeDirectory
+     let d = home </> ".metapragma"
+         mkMeta f = fmap ((dropExtension f,) . lines) (readFile (d </> f))
+     doesDirectoryExist d >>= \case
+       False -> return []
+       True -> getDirectoryContents d
+               >>= filterM (doesFileExist . (d </>))
+               >>= mapM mkMeta
 
 -- | This should be a list of extensions that a plurality of people
 -- can agree upon. It should change in 2016.
@@ -23,8 +41,8 @@ haskell2015 = [ "ConstraintKinds"
               , "RankNTypes"
               ]
 
-defns :: [(String, [String])]
-defns = [("Haskell2015", haskell2015)]
+builtins :: [(String, [String])]
+builtins = [("Haskell2015", haskell2015)]
 
 closeBlockComment :: [String] -> ([String] -> [String] -> r) -> r
 closeBlockComment lns k = uncurry k $ go lns ([],[])
@@ -39,8 +57,8 @@ takeUntilSuffix suffix = go
         go str@(s:ss) | suffix `isPrefixOf` str = []
                       | otherwise = s : go ss
 
-substituteMetaPragmas :: String -> String
-substituteMetaPragmas = unlines . go . lines
+substituteMetaPragmas :: [(String, [String])] -> String -> String
+substituteMetaPragmas defns = unlines . go . lines
   where go [] = []
         go (ln : lns)
           | "-- " `isPrefixOf` ln = ln : go lns
@@ -72,6 +90,8 @@ usage = error msg
 
 main :: IO ()
 main = getArgs >>= \case
-         [_orig, input, output] -> readFile input
-                                   >>= writeFile output . substituteMetaPragmas
+         [_orig, input, output] ->
+           do userDefns <- getDefinitions
+              let defns = builtins ++ userDefns
+              readFile input >>= writeFile output . substituteMetaPragmas defns
          _ -> usage

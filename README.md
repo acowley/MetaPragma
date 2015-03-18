@@ -34,6 +34,14 @@ the source file you want to use it, you write,
 You can include other `LANGUAGE` pragmas on other lines at the top of
 the file.
 
+## Extensibility
+
+If you want to define your own meta-pragmas, create a directory
+`$HOME/.metapragma` and place within it plain text files with one
+`LANGUAGE` pragma per line. You can then refer to this meta-pragma by
+the name of the file (any file extension will be dropped).
+
+
 ## Why?
 
 To reduce boilerplate. This saves a small amount of time, and reduces
