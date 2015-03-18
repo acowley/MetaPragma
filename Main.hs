@@ -16,7 +16,9 @@ haskell2015 = [ "ConstraintKinds"
               , "NoImplicitPrelude"
               , "TypeFamilies"
               , "TypeOperators"
-              , "ScopedTypeVariables" ]
+              , "ScopedTypeVariables"
+              , "RankNTypes"
+              ]
 
 defns :: [(String, [String])]
 defns = [("Haskell2015", haskell2015)]
@@ -41,12 +43,12 @@ substituteMetaPragmas = unlines . go . lines
           | "-- " `isPrefixOf` ln = ln : go lns
           | "{-# META" `isInfixOf` ln = closeBlockComment (ln:lns) $ \pre post ->
                                         aux pre : go post
-          | "{-#" `isInfixOf` ln = ln : 
+          | "{-#" `isInfixOf` ln = ln :
                                    (closeBlockComment (ln:lns) $ \pre post ->
                                    pre ++ go post)
           | otherwise = ln:lns
-        aux (r:rest) = 
-          subst . metas $ 
+        aux (r:rest) =
+          subst . metas $
           drop 8 r ++ takeUntilSuffix "#-}" (unlines rest)
         aux [] = error "Something went wrong parsing a META comment block"
         metas :: String -> [String]
@@ -58,7 +60,7 @@ substituteMetaPragmas = unlines . go . lines
 
 usage :: IO ()
 usage = error msg
-  where msg = unlines 
+  where msg = unlines
               [ "Usage: ghc -F -pgmF metapragma myFile"
               , "Or: {-# OPTIONS_GHC -F -pgmF metapragma #-} in your source file"
               , ""
@@ -70,4 +72,3 @@ main = getArgs >>= \case
          [_orig, input, output] -> readFile input
                                    >>= writeFile output . substituteMetaPragmas
          _ -> usage
-         
