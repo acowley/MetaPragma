@@ -12,6 +12,7 @@ expect to work out of the box today. It includes
 - FlexibleContexts
 - FlexibleInstances
 - GADTs
+- InstanceSigs
 - KindSignatures
 - LambdaCase
 - MultiParamTypeClasses
